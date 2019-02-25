@@ -27,7 +27,7 @@ This will open up the desired illusion on `http://localhost:5006/illusionApp`.
 
 
 #### Switch to another illusion
-Switch which illusion to show in `localhost`by commenting out the specific file in `main.py`
+Switch which illusion to show in `localhost` by commenting out the specific line in `main.py`
 ```python
 ### here the specific illusion is imported 
 import illusionTemplate as illusion
