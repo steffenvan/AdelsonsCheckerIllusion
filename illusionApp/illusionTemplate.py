@@ -15,16 +15,13 @@ def init(_staticRsrcFolder):
 def getName():
     "Returns the name of the illusion"
 
-    return "Template Illusion"
+    return "Adelson's Checker-Shadow Illusion"
 
 def getInstructions():
     "Returns the instructions as a HTML string"
     
     instruction = """
-        <p>Focus your attention on <b style=\"color:red\">the red cross</b> in the centre of the image.
-        Your task is to change the distort slider until all the polygons appear square. When ... or when
-        you can not find a slider position where ... answer the question and press the \"Submit\" button
-        below. Complete this task for each of the variations of this illusion listed below and then press \"Save Data\".</p>
+        <p>Still implementing.</p>
     """
     return instruction
 
@@ -38,7 +35,7 @@ def getNumVariations():
 
     return 3
 
-def draw(variationID, distortion):
+def draw(variationID, distortion, n=5):
     """This function generates the optical illusion figure.
     The function should return a bokeh figure of size 500x500 pixels.
 
@@ -48,8 +45,9 @@ def draw(variationID, distortion):
     """
 
     ## Create figure and disable axes and tools
-    p = figure(plot_width=500, plot_height=500, x_range=(0, 1), y_range=(0, 1))
+    # p = figure(plot_width=500, plot_height=500, x_range=(0, 1), y_range=(0, 1))
     #p.outline_line_color = None
+    p = figure(plot_width=500, plot_height=500, x_range=(0, 10), y_range=(-2, 10))
     p.toolbar.active_drag = None
     p.toolbar.logo = None
     p.toolbar_location = None
@@ -58,7 +56,34 @@ def draw(variationID, distortion):
     p.xgrid.grid_line_color = None
     p.ygrid.grid_line_color = None
 
-    # here in this template we just draw a circle with 'distorted' radius
-    colors = ["Black", "Blue", "Green", "Red", "Yellow", "Purple"]
-    p.circle(0.5,0.5, radius=distortion/2, fill_color=colors[variationID], line_color=None)
+    x_coords = [[1, 2, 2, 1], 
+                [2, 3, 3, 2],
+                [3, 4, 4, 3], 
+                [4, 5,5, 4], 
+                [5, 6, 6, 5]]
+
+    x2_coords = [[6, 6.5, 6.5, 6],
+                 [6.5, 7., 7, 6.5],
+                 [7., 7.5, 7.5, 7],
+                 [7.5, 8, 8, 7.5],
+                 [8, 8.5, 8.5, 8]]
+
+    x_coords.extend(x2_coords)
+
+    y_coords = [[2.0, 1.6, 2.4, 2.8], 
+                [1.6, 1.2, 2.0, 2.4],
+                [1.2, 0.8, 1.6, 2.0], 
+                [0.8, 0.4, 1.2, 1.6], 
+                [0.4, 0.0, 0.8, 1.2]]
+    
+    y2_coords = [[0.0, 1.0, 1.9, 0.8],
+                [1.0, 2.0, 2.9, 1.9],
+                [2.0, 3.0, 3.9, 2.9],
+                [3.0, 4.0, 4.9, 3.9],
+                [4.0, 5.0, 5.9, 4.9]]
+
+    y_coords.extend(y2_coords)
+    alphas = [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9]
+    p.patches(x_coords, y_coords,
+          color=["darkgray", "gray", "darkgray", "gray", "darkgray", "darkgray", "gray", "darkgray", "gray", "darkgray"], alpha=alphas, line_width=2)
     return p
