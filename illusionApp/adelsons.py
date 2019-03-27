@@ -23,9 +23,9 @@ from bokeh.models.sources import ColumnDataSource
 
 # Folder where background images are stored
 staticRsrcFolder = ""
-variations_folder = "illusionApp/variations"
-if not os.path.exists(variations_folder):
-    os.makedirs(variations_folder)
+# variations_folder = "illusionApp/variations"
+# if not os.path.exists(variations_folder):
+#     os.makedirs(variations_folder)
 
 default_parameters = {
     "originalID": None # Represents the actual ID of our illusion. 
@@ -133,17 +133,18 @@ def plot_illusion():
 #     dpi=100
 #     # force_replot=force_replot
     # size_step = size / 4
-    variation_length = len(os.listdir(variations_folder))
-    filenames = [] 
-    for i in range(variation_length):
-        filename = "{}/variation_{}.png".format(variations_folder, i)
-        plot_variations(filename)    
-        # linewidth += linewidth_step
+    # variation_length = len(os.listdir(variations_folder))
+    # filenames = [] 
+    # for i in range(variation_length):
+    #     filename = "{}/variation_{}.png".format(variations_folder, i)
+    #     plot_variations(filename)    
+    #     # linewidth += linewidth_step
     # Decrease size of figure
         # size -= size_step
     # Alternate the angle
-        filenames.append(filename)
-    return filenames
+    #     filenames.append(filename)
+    # return filenames
+    return 
 
 def init(_staticRsrcFolder):
     """This function will be called before the start of the experiment
@@ -200,7 +201,7 @@ def draw(variationID, distortion):
     ## Create bokeh figure and disable axes and tools
     bokehFig = figure(plot_width=500, plot_height=500, x_range=(0, 1), y_range=(0, 1))
     fig = plt.figure(figsize=(20, 20), dpi=100)
-    path = os.path.abspath(variations_folder)
+    path = os.path.abspath(staticRsrcFolder)
     # Change relative path to 
     # TODO: modify, so this does not become necessary
     os.chdir(path)
