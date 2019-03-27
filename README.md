@@ -5,12 +5,12 @@ The illusion can be seen on this [link](https://www.illusionsindex.org/ir/checke
 The directory has this structure 
 ```
 illusionApp
-  ├── illusionApp
-  │   ├── results
-  │   └── static
-  ├── results
-      └── static
-      └── background
+  | 
+  │── results
+  │── static
+        └── background
+  |── variations
+        └── variations_x.png
   ├── threeSquaresIllusion.py
   ├── illusionTemplate.py
   ├── illusionTemplateAlt.py
