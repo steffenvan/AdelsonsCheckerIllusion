@@ -212,6 +212,26 @@ def draw(variationID, distortion):
     :return handle to bokeh figure that contains the optical illusion
     """
 
+    bokehFig = figure(plot_width=500, plot_height=500, x_range=(0, 1), y_range=(0, 1))
+    #p.outline_line_color = None
+    bokehFig.toolbar.active_drag = None
+    bokehFig.toolbar.logo = None
+    bokehFig.toolbar_location = None
+    bokehFig.xaxis.visible = None
+    bokehFig.yaxis.visible = None
+    bokehFig.xgrid.grid_line_color = None
+    bokehFig.ygrid.grid_line_color = None
+
+    filenames = plot_pattern()
+    variationsFolder = os.path.join(staticRsrcFolder, "variations")
+
+    print(variationsFolder+filenames[variationID])
+
+    bokehFig.image_url(url=[variationsFolder+"/"+filenames[variationID]], x=0, y=1, w=None, h=None)
+
+
+    """
+
     ## Create bokeh figure and disable axes and tools
     bokehFig = figure(plot_width=500, plot_height=500, x_range=(0, 1), y_range=(0, 1))
     fig = plt.figure(figsize=(20, 20), dpi=100)
@@ -279,4 +299,6 @@ def draw(variationID, distortion):
     #img.save('my.png')    
 
     plt.close(fig)
+
+    """
     return bokehFig
