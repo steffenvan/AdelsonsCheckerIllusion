@@ -18,8 +18,9 @@ import adelsons as illusion
 
 ## static resource folder
 staticRsrcFolder = "illusionApp/static"
-if not os.path.exists(staticRsrcFolder):
-    os.makedirs(staticRsrcFolder) 
+# staticRsrcFolder = ""
+# if not os.path.exists(staticRsrcFolder):
+#     os.makedirs(staticRsrcFolder) 
 
 ## data output folder
 resultsFolder = 'illusionApp/results'
@@ -66,6 +67,8 @@ save_button = Button( label='Save Data', width=140, button_type = "default", dis
 illusion.init(staticRsrcFolder)
 p = illusion.draw(permMap[variation_selector.active], distortion_slider.value)
 pBox = row(p)
+print("This is pBox: ", pBox)
+print("This is p: ", p)
 
 ## create layout
 layout = column(Div(text="<h2>{}</h2>".format(illusion.getName()), width=500), row(column(

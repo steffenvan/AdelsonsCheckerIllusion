@@ -1,7 +1,9 @@
 import os
 import numpy as np
 
+
 import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
@@ -17,7 +19,6 @@ from bokeh.models import ColumnDataSource, Range1d
 from itertools import islice
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.sources import ColumnDataSource
-
 
 ## Illusion parameters (default values) 
 # Image scale of the illusion 
@@ -73,6 +74,7 @@ illusion_variations = {
 angles = range(10, 90, 10)
 
 remaining_indices = range(max(illusion_variations.keys()) + 1, len(angles) + max(illusion_variations.keys()) + 1)
+print("Remaining indices: ", remaining_indices)
 for i, ang in zip(remaining_indices, angles): 
     illusion_variations[i] = {"pattern_angle": ang, "originalID": i}
     
@@ -88,9 +90,13 @@ for i in illusions_to_modify:
 
 # Modify the parameters according to our illusion variations 
 for variationId, variation in illusion_variations.items(): 
-    for key, value in variation.items(): 
-        illusion_variation_dict[variationId][key] = value
 
+    # print("Variation id: ", variationId)
+    for key, value in variation.items(): 
+        # print("key: {0}, value: {1} ".format(key, value))
+        illusion_variation_dict[variationId][key] = value
+        # print("Assigned value: ", value)
+        # print("dictionary: ", illusion_variation_dict[variationId][key])
 
 # Make sure number of illusions adds up
 #assert not illusions_to_modify
@@ -436,6 +442,7 @@ def draw(variationID, distortion):
             :param size_1, size_2: starting coordinates of this plot"""
             a, b, c, d = size_1[0], size_1[1], size_2[0], size_2[1]
             for i in range(4): 
+                # print("this is hatches: ", hatches)
                 img = Image.open(hatches[i])
                 width, height = img.size
                 # Crop the image with PIL library, because Matplotlib adds a little white border
@@ -449,6 +456,7 @@ def draw(variationID, distortion):
         # Get the list of patterns (redraw or from disk)
         hatches_1 = plot_pattern(pattern_angle)
         hatches_2 = plot_pattern(-pattern_angle)
+        print("Their Hatches: ", hatches_1)
         
         sizes = np.arange(0., pattern_square_width * 4, pattern_square_width)
         reverse = True # A switch for the angle 
