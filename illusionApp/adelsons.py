@@ -24,7 +24,6 @@ from bokeh.models.sources import ColumnDataSource
 # Folder where background images are stored
 staticRsrcFolder = ""
 
-
 def return_files(vID):
     """Combine striped patterns to get our illusion background
     
@@ -38,10 +37,10 @@ def return_files(vID):
     
     :return: list of filenames that contain the patterns"""
 
-    variations_folder = os.path.abspath(staticRsrcFolder)
-    variations_list_path = os.path.join(variations_folder, "variation"+str(vID))
+    staticFolder = os.path.abspath(staticRsrcFolder)
+    variations_list_path = os.path.join(staticFolder, "variation"+str(vID))
+
     dir_as_list = os.listdir(variations_list_path)
-    variation_length = len(os.listdir(variations_list_path))
     filenames = []
     for i in range(len(dir_as_list)):
         filename = dir_as_list[i]
@@ -74,11 +73,9 @@ def getQuestion():
 
     return "Do the squares appear similar?"
 
-
 def getNumVariations():
     "Returns the number of variations"
     return 4
-
 
 def draw(variationID, distortion):
     """This function generates the optical illusion figure.
