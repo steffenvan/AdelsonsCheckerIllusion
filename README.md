@@ -23,6 +23,8 @@ Clone the repository in your desired folder e.g with:
 #### How to test
 As of now you can run the setup in the root of the repository with:
 `bokeh serve --show illusionApp/`
+If this doesnt work because of the clossing socket issue, try:
+`bokeh serve --websocket-max-message-size 10000000 --show illusionApp/`
 This will open up the desired illusion on `http://localhost:5006/illusionApp`. 
 
 

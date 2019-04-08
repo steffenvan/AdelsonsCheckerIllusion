@@ -1,10 +1,14 @@
 import os
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource
+from bokeh.models.glyphs import ImageURL
+import numpy as np
+
 
 colors = ["Black", "Blue", "Green", "Red", "Yellow", "Purple"]
 
-staticRsrcFolder = ""
+staticRsrcFolder = "illusionApp/static"
+
 
 def init(_staticRsrcFolder):
     """This function will be called before the start of the experiment
@@ -72,5 +76,26 @@ def draw(variationID, distortion):
     # global source
 
     #here we only change the content of the data source and the circle updates automatically
-    source.data = dict(radius=[distortion/2], color=[colors[variationID]])
+
+    # display the illusion from image. 
+    imgString = staticRsrcFolder + 'standard.png'
+    # N = 5
+    # source = ColumnDataSource(dict(
+    # imgString = [imgString]*N,
+    # x1  = np.linspace(  0, 150, N),
+    # y1  = np.linspace(  0, 150, N),
+    # w1  = np.linspace( 10,  50, N),
+    # h1  = np.linspace( 10,  50, N),
+    # x2  = np.linspace(-50, 150, N),
+    # y2  = np.linspace(  0, 200, N),
+    # ))
+
+    # image3 = ImageURL(url=dict(value=url), x=200, y=-100, anchor="bottom_right")
+
+    p = ImageURL(url=imgString, x=100, y=100)
+    # p = figure(x_range=(0,1), y_range=(0,1))
+    # p.image_url(url=['pngs/standard.png'], x=0, y=1, w=500, h=500)
+    # source.data = dict(radius=[distortion/2], color=[colors[variationID]])
+
+    
     return p

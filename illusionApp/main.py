@@ -18,8 +18,9 @@ import adelsons as illusion
 
 ## static resource folder
 staticRsrcFolder = "illusionApp/static"
-if not os.path.exists(staticRsrcFolder):
-    os.makedirs(staticRsrcFolder) 
+# staticRsrcFolder = ""
+# if not os.path.exists(staticRsrcFolder):
+#     os.makedirs(staticRsrcFolder) 
 
 ## data output folder
 resultsFolder = 'illusionApp/results'
@@ -43,13 +44,13 @@ distortionData = [{'variationID': i, 'selectorID': invPermMap[i], 'submitted': F
 
 
 ## Create various gui widgets
-distortion_slider = Slider(start=0, end=1, step=0.001, value=0.5, show_value=False, tooltips=False)
+distortion_slider = Slider(start=0, end=4, step=0.8, value=0, show_value=False, tooltips=False)
 
 def reset_slider(): 
     # randomize slider min, max and starting value for every illusion switch 
     # (to avoid the subject remembering the values from previously completed illusion variations)
-    distortion_slider.start = np.random.uniform(0, 0.2)
-    distortion_slider.end = np.random.uniform(0.8, 1)
+    distortion_slider.start = np.random.uniform(0, 1)
+    distortion_slider.end = np.random.uniform(3, 4)
     distortion_slider.value = np.random.uniform(distortion_slider.start, distortion_slider.end)
 
 reset_slider()
@@ -66,6 +67,8 @@ save_button = Button( label='Save Data', width=140, button_type = "default", dis
 illusion.init(staticRsrcFolder)
 p = illusion.draw(permMap[variation_selector.active], distortion_slider.value)
 pBox = row(p)
+print("This is pBox: ", pBox)
+print("This is p: ", p)
 
 ## create layout
 layout = column(Div(text="<h2>{}</h2>".format(illusion.getName()), width=500), row(column(
