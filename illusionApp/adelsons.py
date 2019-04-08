@@ -42,7 +42,7 @@ illusion_variations = {
 }
 
 
-# remaining_indices = range(max(illusion_variations.keys()) + 1, max(illusion_variations.keys()) + 1)
+remaining_indices = range(max(illusion_variations.keys()) + 1, max(illusion_variations.keys()) + 1)
 # for i, shade in zip(remaining_indices, shade): 
 #     illusion_variations[i] = {"shade_id": shade, "originalID": i}
     
@@ -63,8 +63,8 @@ for variationId, variation in illusion_variations.items():
     for key, value in variation.items(): 
         # print("key: {0}, value: {1} ".format(key, value))
         illusion_variation_dict[variationId][key] = value
-        # print("Assigned value: ", value)
-        # print("dictionary: ", illusion_variation_dict[variationId][key])
+        print("Assigned value: ", value)
+        print("dictionary: ", illusion_variation_dict[variationId][key])
 
 
 # Make sure number of illusions adds up
@@ -87,77 +87,27 @@ def fig2data ( fig ):
     buf = np.roll ( buf, 3, axis = 2 )
     return buf
 
-## More complex implementation of the pattern. 
-# Allows to specify the angle of the black lines.
-
-def plot_variations(filename, offset=.05, linewidth=4, figsize=(20, 20), dpi=150):
-    """"Generate striped pattern, and save as .png. 
+def return_files(vID):
+    """Combine striped patterns to get our illusion background
     
-    :param filename: the filename to save the pattern to
     :param angle: the angle of the lines 
-    :param offset: the distance between the lines
-    :param linewidth: the width of the liens 
-    :param figsize: the size of the saved image
-    :param dpi: the dpi of the image"""
-    fig = plt.figure(figsize=figsize, dpi=dpi, frameon=False)
-    ax = fig.add_axes([0, 0, 1, 1])
-    ax.axis('off')
-    ## Generate lines at an angle 
-    # angle_radians = np.radians(angle)
-        
-    # Remove as much whitespace around plot as possible. 
-    # ax.set_ylim(20, 1.)
-    # ax.set_xlim(0., 1.)
-    a=fig.gca()
-    a.set_frame_on(False)
-    a.set_xticks([])
-    a.set_yticks([])
-    plt.axis('off')
-    ax.axis('off')
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
-    ax.spines['left'].set_visible(False)
-    plt.savefig(filename)
-    plt.clf()
-    plt.close()
+    :param size: the size of the figure
+    :param offsets: the space between the lines for each pattern (manually determined, depend on the image scale)
+    :param linewidth: the thickness of the line 
+    :param linewidth_step: increase the line thickness by this amount for every smaller pattern
+    :param dpi: the dpi of the output image
+    :param force_replot: if true, will redraw the pattern every time, otherwise load from disc 
+    
+    :return: list of filenames that contain the patterns"""
 
-def plot_pattern():
-#     """Combine striped patterns to get our illusion background
-    
-#     :param angle: the angle of the lines 
-#     :param size: the size of the figure
-#     :param offsets: the space between the lines for each pattern (manually determined, depend on the image scale)
-#     :param linewidth: the thickness of the line 
-#     :param linewidth_step: increase the line thickness by this amount for every smaller pattern
-#     :param dpi: the dpi of the output image
-#     :param force_replot: if true, will redraw the pattern every time, otherwise load from disc 
-    
-#     :return: list of filenames that contain the patterns"""
-#     size=pattern_square_widthfig2
-#     offsets=[0.03, 0.05, 0.08, 0.21]
-#     linewidth=8.
-#     linewidth_step=1.
-#     dpi=100
-#     # force_replot=force_replot
-    # size_step = size / 4
     variations_folder = os.path.abspath(staticRsrcFolder)
-    variations_list_path = os.path.join(variations_folder, "variations")
+    variations_list_path = os.path.join(variations_folder, "variation"+str(vID))
     dir_as_list = os.listdir(variations_list_path)
-    # print("Herpderp: ", variations_list_path)
     variation_length = len(os.listdir(variations_list_path))
     filenames = []
     for i in range(len(dir_as_list)):
-        # filename = "{}/variation_{}.png".format(variations_list_path, i)
         filename = dir_as_list[i]
-        # print("filename: ", filename)
-        plot_variations(filename)    
         filenames.append(filename)
-    # # Decrease size of figure
-    #     # size -= size_step
-    # # Alternate the angle
-    #     filenames.append(filename)
-    # return filenames
     return filenames
 
 def init(_staticRsrcFolder):
@@ -168,17 +118,6 @@ def init(_staticRsrcFolder):
     """
     global staticRsrcFolder
     staticRsrcFolder = _staticRsrcFolder
-
-    global variations
-    variationsFolder = os.path.join(staticRsrcFolder, "variations")
-
-    # if not os.path.exists():
-    #     os.makedirs(pattern_folder)
-
-    # Generate the images of the background pattern in advance, to save computation  
-    # for _ in range(1,4): 
-    #     plot_pattern()
-
 
 def getName():
     "Returns the name of the illusion"
@@ -200,13 +139,12 @@ def getQuestion():
 
 def getNumVariations():
     "Returns the number of variations"
-    return llusion_count
+    return 4
 
 
 def draw(variationID, distortion):
     """This function generates the optical illusion figure.
     The function should return a bokeh figure of size 500x500 pixels.
-
     :param variationID: select which variation to draw (range: 0 to getNumVariations()-1)
     :param distortion: the selected distorion (range: 0.0 to 1.0)
     :return handle to bokeh figure that contains the optical illusion
@@ -222,83 +160,18 @@ def draw(variationID, distortion):
     bokehFig.xgrid.grid_line_color = None
     bokehFig.ygrid.grid_line_color = None
 
-    filenames = plot_pattern()
-    variationsFolder = os.path.join(staticRsrcFolder, "variations")
+    filenames = return_files(variationID)
+    variationsFolder = os.path.join(staticRsrcFolder, "variation"+str(variationID))
 
-    print(variationsFolder+filenames[variationID])
+    # Rounding the distortion value to nearest integer
+    shadowDistortion = round(distortion)
 
-    bokehFig.image_url(url=[variationsFolder+"/"+filenames[variationID]], x=0, y=1, w=None, h=None)
+    # Absolute path to the specific variation folder
+    # The specific file to show is indexed by the distortion value.
+    file = os.path.join(variationsFolder, filenames[shadowDistortion])
+    print("Distortion: ", shadowDistortion)
+    print("File: ", file)
 
+    bokehFig.image_url(url=[file], x=0, y=1, w=None, h=None)
 
-    """
-
-    ## Create bokeh figure and disable axes and tools
-    bokehFig = figure(plot_width=500, plot_height=500, x_range=(0, 1), y_range=(0, 1))
-    fig = plt.figure(figsize=(20, 20), dpi=100)
-    # path = os.path.abspath(staticRsrcFolder)
-    # variations_list_path = os.path.join(path, "variations")
-    illusion_id = variationID+1
-    distortion_id = distortion + 1
-
-    params_dict = illusion_variation_dict[illusion_id] 
-    # originalID = params_dict["originalID"]   
-
-    variationsFolder = os.path.join(staticRsrcFolder, "variations")
-    def display_illusion(file, filepath):
-        # variations = os.path.join(file, filepath)
-        # print("Variations: ", variations)
-        file = os.path.join(filepath, file) 
-        # for i in range(4):
-        img = Image.open(file)
-        plt.imshow(img, interpolation="none", aspect="equal", origin='upper')
-    # get the filesnames
-    # List of file names
-    filenames = plot_pattern()
-
-    # file path for file name: 
-    print("This is filenames: ", filenames)
-
-    for i in range(3):
-        display_illusion(filenames[i], variationsFolder)    
-    # img = Image.open(variations[0])
-    # plt.imshow(img, interpolation="none", aspect="equal", origin='upper') 
-
-    # print("variations")
-    # print("Variations: ", variations)
-    # for i in range(3):
-        # display_illusion(variations[i])
-
-    # TODO: modify, so this does not become necessary
-    # os.chdir(path)
-    
-    # for i in range(3):
-    #     # print(variations_list[i])
-    #     img = Image.open(variations_list[i])
-    # img = Image.open(variations_list[illusion_id])
-    # plt.imshow(img, interpolation="none", aspect="equal", origin='upper')
-
-
-    # illusion_selector = variationID+1
-    # distort = (distortion*2-1)*0.15
-    # print("path for variations: ", path)
-    ### Render final figure 
-    ax = fig.add_axes([0, 0, 1, 1])
-    
-    # Clean extra whitespace around the plot and remove axes 
-    axes = plt.gca()
-    axes.set_xlim([0., 100.])
-    axes.set_ylim([0., 100.])
-    plt.axis('off')
-    axes.xaxis.set_major_locator(NullLocator())
-    axes.yaxis.set_major_locator(NullLocator())
-
-    # convert matplotfig to bitmap and display it on bokeh figure
-    bokehFig.image_rgba([np.flip(fig2data(fig),0)], x=[0], y=[0], dw=[1], dh=[1]) 
-
-    #img = Image.fromarray(fig2data(fig), 'RGBA')
-    #img.save('my.png')    
-
-    plt.close(fig)
-
-    """
     return bokehFig
