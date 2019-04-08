@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-
+# Weird macOS fix for displaying screen-shots. 
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -23,69 +23,7 @@ from bokeh.models.sources import ColumnDataSource
 
 # Folder where background images are stored
 staticRsrcFolder = ""
-# variations_folder = "illusionApp/variations"
-# if not os.path.exists(variations_folder):
-#     os.makedirs(variations_folder)
-# path_name = os.path.join(os.path.basename(os.path.dirname(__file__)), "", "variation")
-# print(path_name)
-default_parameters = {
-    "shade_id": None,
-    "originalID": None # Represents the actual ID of our illusion. 
-}
 
-## This variable specifies the parameter variations we will apply 
-illusion_variations = {
-    1: {"originalID": 1}, 
-    2: {"shade_id": 2, "originalID": 2}, 
-    3: {"shade_id": 3, "originalID": 3}, 
-    4: {"shade_id": 4, "originalID": 4}    
-}
-
-
-remaining_indices = range(max(illusion_variations.keys()) + 1, max(illusion_variations.keys()) + 1)
-# for i, shade in zip(remaining_indices, shade): 
-#     illusion_variations[i] = {"shade_id": shade, "originalID": i}
-    
-llusion_count = len(illusion_variations)
-
-## This dictionary contains the final illusion parameters for each illusion variation we will 
-illusion_variation_dict = {}
-illusions_to_modify = list(illusion_variations.keys())
-
-# Create a dictionary with default parameters
-for i in illusions_to_modify: 
-    illusion_variation_dict[i] = default_parameters.copy()
-
-# Modify the parameters according to our illusion variations 
-for variationId, variation in illusion_variations.items(): 
-
-    # print("Variation id: ", variationId)
-    for key, value in variation.items(): 
-        # print("key: {0}, value: {1} ".format(key, value))
-        illusion_variation_dict[variationId][key] = value
-        print("Assigned value: ", value)
-        print("dictionary: ", illusion_variation_dict[variationId][key])
-
-
-# Make sure number of illusions adds up
-#assert not illusions_to_modify
-def fig2data ( fig ):
-    """
-    @brief Convert a Matplotlib figure to a 4D numpy array with RGBA channels and return it
-    @param fig a matplotlib figure
-    @return a numpy 3D array of RGBA values
-    """
-    # draw the renderer
-    fig.canvas.draw()
- 
-    # Get the RGBA buffer from the figure
-    w,h = fig.canvas.get_width_height()
-    buf = np.fromstring ( fig.canvas.tostring_argb(), dtype=np.uint8 )
-    buf.shape = ( w, h, 4)
- 
-    # canvas.tostring_argb give pixmap in ARGB mode. Roll the ALPHA channel to have it in RGBA mode
-    buf = np.roll ( buf, 3, axis = 2 )
-    return buf
 
 def return_files(vID):
     """Combine striped patterns to get our illusion background
@@ -121,13 +59,13 @@ def init(_staticRsrcFolder):
 
 def getName():
     "Returns the name of the illusion"
-    return "Adelsons Checker illusion"
+    return "Adelson's Checker-Shadow illusion"
 
 def getInstructions():
     "Returns the instructions as a HTML string"
     
     instruction = """
-        <p>Look at tile A and B - notice that they seem disimilar? They are not".</p>
+        <p>Compare tile A and tile B. Click on the different variations to change the intensity of the colours of some of the tiles. Modify the shadow strength by using the slider".</p>
     """
     return instruction
 
@@ -145,13 +83,13 @@ def getNumVariations():
 def draw(variationID, distortion):
     """This function generates the optical illusion figure.
     The function should return a bokeh figure of size 500x500 pixels.
-    :param variationID: select which variation to draw (range: 0 to getNumVariations()-1)
-    :param distortion: the selected distorion (range: 0.0 to 1.0)
+    :param variationID: select which variation to draw (changes the path to the folder in which the distortions are stored)
+    :param distortion: the selected distorion (rounded to be an integer from which we choose the shadow intensity)
     :return handle to bokeh figure that contains the optical illusion
     """
 
     bokehFig = figure(plot_width=500, plot_height=500, x_range=(0, 1), y_range=(0, 1))
-    #p.outline_line_color = None
+
     bokehFig.toolbar.active_drag = None
     bokehFig.toolbar.logo = None
     bokehFig.toolbar_location = None
@@ -166,8 +104,8 @@ def draw(variationID, distortion):
     # Rounding the distortion value to nearest integer
     shadowDistortion = round(distortion)
 
-    # Absolute path to the specific variation folder
-    # The specific file to show is indexed by the distortion value.
+    # Absolute path to the different variation. Indexed by variationID 
+    # The distortion changes the shadow intensity. 
     file = os.path.join(variationsFolder, filenames[shadowDistortion])
     print("Distortion: ", shadowDistortion)
     print("File: ", file)
