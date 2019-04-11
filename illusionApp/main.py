@@ -49,8 +49,8 @@ distortion_slider = Slider(start=0, end=4, step=0.8, value=0, show_value=False, 
 def reset_slider(): 
     # randomize slider min, max and starting value for every illusion switch 
     # (to avoid the subject remembering the values from previously completed illusion variations)
-    distortion_slider.start = np.random.uniform(0, 1)
-    distortion_slider.end = np.random.uniform(3, 4)
+    distortion_slider.start = 0
+    distortion_slider.end = 14
     distortion_slider.value = np.random.uniform(distortion_slider.start, distortion_slider.end)
 
 reset_slider()

@@ -4,21 +4,8 @@ import numpy as np
 # Weird macOS fix for displaying screen-shots. 
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.ticker import NullLocator
-from PIL import Image
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 
-from bokeh.io import show
-from bokeh.layouts import widgetbox, column, row, layout
-from bokeh.models.widgets import Button, RadioButtonGroup, Select, Slider, TextInput, RadioGroup, Toggle, Div
 from bokeh.plotting import figure, curdoc
-from bokeh.models.plots import Plot
-from bokeh.models import ColumnDataSource, Range1d
-from itertools import islice
-from bokeh.models.callbacks import CustomJS
-from bokeh.models.sources import ColumnDataSource
 
 
 # Folder where background images are stored
@@ -26,15 +13,15 @@ staticRsrcFolder = ""
 
 def return_files(vID):
     """Combine striped patterns to get our illusion background
-    
-    :param angle: the angle of the lines 
+
+    :param angle: the angle of the lines
     :param size: the size of the figure
     :param offsets: the space between the lines for each pattern (manually determined, depend on the image scale)
-    :param linewidth: the thickness of the line 
+    :param linewidth: the thickness of the line
     :param linewidth_step: increase the line thickness by this amount for every smaller pattern
     :param dpi: the dpi of the output image
-    :param force_replot: if true, will redraw the pattern every time, otherwise load from disc 
-    
+    :param force_replot: if true, will redraw the pattern every time, otherwise load from disc
+
     :return: list of filenames that contain the patterns"""
 
     staticFolder = os.path.abspath(staticRsrcFolder)
@@ -46,6 +33,7 @@ def return_files(vID):
         filename = dir_as_list[i]
         filenames.append(filename)
     return filenames
+
 
 def init(_staticRsrcFolder):
     """This function will be called before the start of the experiment
@@ -75,7 +63,7 @@ def getQuestion():
 
 def getNumVariations():
     "Returns the number of variations"
-    return 4
+    return 10
 
 def draw(variationID, distortion):
     """This function generates the optical illusion figure.
@@ -84,7 +72,6 @@ def draw(variationID, distortion):
     :param distortion: the selected distorion (rounded to be an integer from which we choose the shadow intensity)
     :return handle to bokeh figure that contains the optical illusion
     """
-
     bokehFig = figure(plot_width=500, plot_height=500, x_range=(0, 1), y_range=(0, 1))
 
     bokehFig.toolbar.active_drag = None
@@ -95,15 +82,16 @@ def draw(variationID, distortion):
     bokehFig.xgrid.grid_line_color = None
     bokehFig.ygrid.grid_line_color = None
 
-    filenames = return_files(variationID)
-    variationsFolder = os.path.join(staticRsrcFolder, "variation"+str(variationID))
+    variationsFolder = os.path.join(staticRsrcFolder, "variations")
+
 
     # Rounding the distortion value to nearest integer
     shadowDistortion = round(distortion)
 
     # Absolute path to the different variation. Indexed by variationID 
-    # The distortion changes the shadow intensity. 
-    file = os.path.join(variationsFolder, filenames[shadowDistortion])
+    # The distortion changes the shadow intensity.
+    filename = "variation_" + str(variationID) + "_" + str(shadowDistortion) + ".png"
+    file = os.path.join(variationsFolder, filename)
     print("Distortion: ", shadowDistortion)
     print("File: ", file)
 
